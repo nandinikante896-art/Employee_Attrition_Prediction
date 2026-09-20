@@ -19,32 +19,100 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-html, body, [data-testid="stAppViewContainer"] {
+html, body {
     margin: 0 !important;
     padding: 0 !important;
 }
 
+[data-testid="stAppViewContainer"] {
+    background: linear-gradient(135deg, #07111f, #101a33, #0b1325);
+}
+
 [data-testid="stHeader"] {
     height: 0 !important;
-    min-height: 0 !important;
     background: transparent !important;
-}
-
-[data-testid="stToolbar"] {
-    display: none !important;
-}
-
-[data-testid="stDecoration"] {
-    display: none !important;
 }
 
 .block-container {
     max-width: 100% !important;
     padding-top: 0.5rem !important;
-    padding-bottom: 1rem !important;
     padding-left: 3rem !important;
     padding-right: 3rem !important;
 }
+
+/* INPUT BOX */
+div[data-baseweb="input"] {
+    background-color: white !important;
+    border-radius: 10px !important;
+}
+
+div[data-baseweb="input"] > div {
+    background-color: white !important;
+    border: 1px solid #cccccc !important;
+}
+
+div[data-baseweb="input"] input {
+    color: #111111 !important;
+    background-color: white !important;
+    -webkit-text-fill-color: #111111 !important;
+}
+
+/* SELECT BOX */
+div[data-baseweb="select"] > div {
+    background-color: white !important;
+    border: 1px solid #cccccc !important;
+    border-radius: 10px !important;
+}
+
+div[data-baseweb="select"] input {
+    color: #111111 !important;
+    -webkit-text-fill-color: #111111 !important;
+}
+
+div[data-baseweb="select"] span {
+    color: #111111 !important;
+}
+
+/* NUMBER INPUT */
+input[type="number"] {
+    color: #111111 !important;
+    background-color: white !important;
+    -webkit-text-fill-color: #111111 !important;
+}
+
+/* LABELS */
+label {
+    color: white !important;
+    font-weight: 600 !important;
+}
+
+/* TITLE */
+.main-title {
+    text-align: center;
+    color: white;
+    font-size: 3rem;
+    font-weight: 800;
+}
+
+.subtitle {
+    text-align: center;
+    color: #c5d0e0;
+    margin-bottom: 1.5rem;
+}
+
+/* BUTTON */
+.stButton > button {
+    width: 100%;
+    height: 3.2rem;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    color: white !important;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+</style>
+""", unsafe_allow_html=True)
 
 /* Main background */
 [data-testid="stAppViewContainer"] {
