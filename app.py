@@ -15,11 +15,13 @@ st.set_page_config(
 # =========================================================
 st.markdown("""
 <style>
-.block-container 
+.block-container {
     max-width: 100%;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
     padding-left: 3rem;
     padding-right: 3rem;
-
+}
 .stApp {
     background:
         radial-gradient(circle at 10% 10%, rgba(0, 150, 255, 0.20), transparent 25%),
