@@ -182,7 +182,7 @@ div[data-baseweb="select"] span {
 # =========================================================
 # LOAD MODEL
 # =========================================================
-MODEL_PATH = Path(__file__).resolve().parent / "models" / "best_model.pkl"
+MODEL_PATH = Path(__file__).resolve().parent /  "best_model.pkl"
 
 try:
     model = joblib.load(MODEL_PATH)
