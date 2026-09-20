@@ -3,8 +3,9 @@ import pandas as pd
 import joblib
 from pathlib import Path
 
+
 # =========================================================
-# PAGE CONFIG
+# PAGE CONFIGURATION
 # =========================================================
 
 st.set_page_config(
@@ -14,253 +15,295 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+
 # =========================================================
-# CSS
+# CUSTOM CSS
 # =========================================================
 
-st.markdown("""
-<style>
+st.markdown(
+    """
+    <style>
 
-html, body {
-    margin: 0;
-    padding: 0;
-}
+    /* -------------------- MAIN PAGE -------------------- */
 
-[data-testid="stAppViewContainer"] {
-    background:
-        radial-gradient(
-            circle at top left,
-            rgba(90, 70, 180, 0.30),
-            transparent 35%
-        ),
-        radial-gradient(
-            circle at bottom right,
-            rgba(0, 160, 190, 0.20),
-            transparent 35%
-        ),
-        linear-gradient(
-            135deg,
-            #07111f 0%,
-            #101a33 50%,
-            #0b1325 100%
-        );
-}
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+    }
 
-[data-testid="stHeader"] {
-    background: transparent;
-    height: 0;
-    min-height: 0;
-}
+    [data-testid="stAppViewContainer"] {
+        background:
+            radial-gradient(
+                circle at top left,
+                rgba(90, 70, 180, 0.30),
+                transparent 35%
+            ),
+            radial-gradient(
+                circle at bottom right,
+                rgba(0, 160, 190, 0.20),
+                transparent 35%
+            ),
+            linear-gradient(
+                135deg,
+                #07111f 0%,
+                #101a33 50%,
+                #0b1325 100%
+            );
+    }
 
-[data-testid="stToolbar"] {
-    display: none;
-}
+    [data-testid="stHeader"] {
+        background: transparent;
+        height: 0;
+        min-height: 0;
+    }
 
-[data-testid="stDecoration"] {
-    display: none;
-}
+    [data-testid="stToolbar"] {
+        display: none;
+    }
 
-.block-container {
-    max-width: 100% !important;
-    padding-top: 0.5rem !important;
-    padding-bottom: 1rem !important;
-    padding-left: 3rem !important;
-    padding-right: 3rem !important;
-}
+    [data-testid="stDecoration"] {
+        display: none;
+    }
 
-/* TITLE */
+    .block-container {
+        max-width: 100% !important;
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+        padding-left: 3rem !important;
+        padding-right: 3rem !important;
+    }
 
-.main-title {
-    text-align: center;
-    color: white !important;
-    font-size: 3rem;
-    font-weight: 800;
-    margin: 0;
-}
 
-.subtitle {
-    text-align: center;
-    color: #d4dbea !important;
-    font-size: 1.05rem;
-    margin-bottom: 1.5rem;
-}
+    /* -------------------- TITLE -------------------- */
 
-/* SECTION */
+    .main-title {
+        text-align: center;
+        color: white !important;
+        font-size: 3rem;
+        font-weight: 800;
+        margin: 0;
+        padding: 0;
+    }
 
-.section-title {
-    color: white !important;
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 0.3rem;
-}
+    .subtitle {
+        text-align: center;
+        color: #d4dbea !important;
+        font-size: 1.05rem;
+        margin-top: 5px;
+        margin-bottom: 30px;
+    }
 
-.section-text {
-    color: #c5cfdf !important;
-    margin-bottom: 1rem;
-}
 
-/* LABELS */
+    /* -------------------- SECTION -------------------- */
 
-label {
-    color: white !important;
-    font-weight: 600 !important;
-}
+    .section-title {
+        color: white !important;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
 
-/* INPUT BOX */
+    .section-text {
+        color: #c5cfdf !important;
+        margin-bottom: 15px;
+    }
 
-div[data-baseweb="input"] {
-    background-color: white !important;
-    border-radius: 10px !important;
-    border: 1px solid #d0d5dd !important;
-}
 
-div[data-baseweb="input"] > div {
-    background-color: white !important;
-    border-radius: 10px !important;
-    border: none !important;
-}
+    /* -------------------- LABELS -------------------- */
 
-div[data-baseweb="input"] input {
-    background-color: white !important;
-    color: #111111 !important;
-    -webkit-text-fill-color: #111111 !important;
-    font-size: 1rem !important;
-}
+    label {
+        color: white !important;
+        font-weight: 600 !important;
+    }
 
-/* NUMBER INPUT */
 
-input[type="number"] {
-    color: #111111 !important;
-    background-color: white !important;
-    -webkit-text-fill-color: #111111 !important;
-}
+    /* -------------------- TEXT / NUMBER INPUT -------------------- */
 
-/* SELECT BOX */
+    div[data-baseweb="input"] {
+        background-color: white !important;
+        border-radius: 10px !important;
+        border: 1px solid #d0d5dd !important;
+    }
 
-div[data-baseweb="select"] > div {
-    background-color: white !important;
-    border: 1px solid #d0d5dd !important;
-    border-radius: 10px !important;
-}
+    div[data-baseweb="input"] > div {
+        background-color: white !important;
+        border-radius: 10px !important;
+        border: none !important;
+    }
 
-div[data-baseweb="select"] span {
-    color: #111111 !important;
-    -webkit-text-fill-color: #111111 !important;
-}
+    div[data-baseweb="input"] input {
+        background-color: white !important;
+        color: #111111 !important;
+        -webkit-text-fill-color: #111111 !important;
+        font-size: 1rem !important;
+    }
 
-div[data-baseweb="select"] input {
-    color: #111111 !important;
-    -webkit-text-fill-color: #111111 !important;
-}
+    input[type="number"] {
+        color: #111111 !important;
+        background-color: white !important;
+        -webkit-text-fill-color: #111111 !important;
+    }
 
-/* DROPDOWN */
 
-div[data-baseweb="popover"] {
-    background-color: white !important;
-}
+    /* -------------------- SELECT BOX -------------------- */
 
-div[data-baseweb="menu"] {
-    background-color: white !important;
-}
+    div[data-baseweb="select"] > div {
+        background-color: white !important;
+        border: 1px solid #d0d5dd !important;
+        border-radius: 10px !important;
+    }
 
-div[role="option"] {
-    color: #111111 !important;
-    background-color: white !important;
-}
+    div[data-baseweb="select"] span {
+        color: #111111 !important;
+        -webkit-text-fill-color: #111111 !important;
+    }
 
-div[role="option"]:hover {
-    background-color: #eeeeee !important;
-    color: #111111 !important;
-}
+    div[data-baseweb="select"] input {
+        color: #111111 !important;
+        -webkit-text-fill-color: #111111 !important;
+    }
 
-/* BUTTON */
 
-.stButton > button {
-    width: 100% !important;
-    height: 3.2rem !important;
-    border: none !important;
-    border-radius: 12px !important;
-    background: linear-gradient(
-        90deg,
-        #667eea,
-        #764ba2
-    ) !important;
-    color: white !important;
-    font-size: 1.1rem !important;
-    font-weight: 700 !important;
-}
+    /* -------------------- DROPDOWN -------------------- */
 
-.stButton > button:hover {
-    color: white !important;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(118, 75, 162, 0.45);
-}
+    div[data-baseweb="popover"] {
+        background-color: white !important;
+    }
 
-/* RESULT */
+    div[data-baseweb="menu"] {
+        background-color: white !important;
+    }
 
-.high-risk {
-    background: rgba(220, 53, 69, 0.18);
-    border: 1px solid rgba(255, 90, 100, 0.50);
-    border-radius: 18px;
-    padding: 1.5rem;
-    text-align: center;
-    margin-top: 1.5rem;
-}
+    div[role="option"] {
+        color: #111111 !important;
+        background-color: white !important;
+    }
 
-.low-risk {
-    background: rgba(25, 180, 110, 0.18);
-    border: 1px solid rgba(50, 220, 140, 0.50);
-    border-radius: 18px;
-    padding: 1.5rem;
-    text-align: center;
-    margin-top: 1.5rem;
-}
+    div[role="option"]:hover {
+        background-color: #eeeeee !important;
+        color: #111111 !important;
+    }
 
-.result-title {
-    color: white !important;
-    font-size: 1.8rem;
-    font-weight: 800;
-}
 
-.result-probability {
-    color: #e5edf9 !important;
-    font-size: 1.15rem;
-    margin-top: 0.5rem;
-}
+    /* -------------------- SLIDER -------------------- */
 
-/* FOOTER */
+    [data-testid="stSlider"] {
+        color: white !important;
+    }
 
-.footer {
-    text-align: center;
-    color: #aab7ca !important;
-    font-size: 0.9rem;
-    margin-top: 2rem;
-}
 
-</style>
-""", unsafe_allow_html=True)
+    /* -------------------- BUTTON -------------------- */
+
+    .stButton > button {
+        width: 100% !important;
+        height: 3.3rem !important;
+        border: none !important;
+        border-radius: 12px !important;
+        background: linear-gradient(
+            90deg,
+            #667eea,
+            #764ba2
+        ) !important;
+        color: white !important;
+        font-size: 1.1rem !important;
+        font-weight: 700 !important;
+        margin-top: 15px;
+    }
+
+    .stButton > button:hover {
+        color: white !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(118, 75, 162, 0.45);
+    }
+
+
+    /* -------------------- RESULT BOX -------------------- */
+
+    .result-box {
+        margin-top: 30px;
+        padding: 25px;
+        border-radius: 18px;
+        text-align: center;
+    }
+
+    .high-risk {
+        background: rgba(220, 53, 69, 0.18);
+        border: 1px solid rgba(255, 90, 100, 0.50);
+    }
+
+    .low-risk {
+        background: rgba(25, 180, 110, 0.18);
+        border: 1px solid rgba(50, 220, 140, 0.50);
+    }
+
+    .result-title {
+        color: white !important;
+        font-size: 1.8rem;
+        font-weight: 800;
+    }
+
+    .result-probability {
+        color: #e5edf9 !important;
+        font-size: 1.15rem;
+        margin-top: 8px;
+    }
+
+
+    /* -------------------- FOOTER -------------------- */
+
+    .footer {
+        text-align: center;
+        color: #aab7ca !important;
+        font-size: 0.9rem;
+        margin-top: 35px;
+        padding-bottom: 10px;
+    }
+
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
+# =========================================================
+# MODEL PATH
+# =========================================================
+
+MODEL_PATH = (
+    Path(__file__).resolve().parent
+    / "models"
+    / "best_model.pkl"
+)
+
 
 # =========================================================
 # LOAD MODEL
 # =========================================================
 
-MODEL_PATH = (
-    Path(__file__).resolve().parent
-    /  "best_model.pkl"
-)
+if not MODEL_PATH.exists():
+
+    st.error(
+        "❌ Model file not found!\n\n"
+        "Please make sure this file exists:\n\n"
+        "`models/best_model.pkl`"
+    )
+
+    st.stop()
+
 
 try:
+
     model = joblib.load(MODEL_PATH)
 
-except FileNotFoundError:
+except Exception as e:
+
     st.error(
-        "❌ Model not found. Please check models/best_model.pkl"
+        f"❌ Error loading model:\n\n{e}"
     )
+
     st.stop()
 
-except Exception as e:
-    st.error(f"❌ Model loading error: {e}")
-    st.stop()
 
 # =========================================================
 # HEADER
@@ -284,6 +327,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+
 # =========================================================
 # EMPLOYEE INFORMATION
 # =========================================================
@@ -306,13 +350,16 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+
 # =========================================================
 # ROW 1
 # =========================================================
 
 col1, col2, col3 = st.columns(3)
 
+
 with col1:
+
     age = st.number_input(
         "🎂 Age",
         min_value=18,
@@ -320,7 +367,9 @@ with col1:
         value=30
     )
 
+
 with col2:
+
     department = st.selectbox(
         "🏢 Department",
         [
@@ -330,7 +379,9 @@ with col2:
         ]
     )
 
+
 with col3:
+
     job_role = st.selectbox(
         "💼 Job Role",
         [
@@ -346,13 +397,16 @@ with col3:
         ]
     )
 
+
 # =========================================================
 # ROW 2
 # =========================================================
 
 col1, col2, col3 = st.columns(3)
 
+
 with col1:
+
     monthly_income = st.number_input(
         "💰 Monthly Income",
         min_value=1000,
@@ -361,7 +415,9 @@ with col1:
         step=500
     )
 
+
 with col2:
+
     business_travel = st.selectbox(
         "✈️ Business Travel",
         [
@@ -371,7 +427,9 @@ with col2:
         ]
     )
 
+
 with col3:
+
     distance_from_home = st.number_input(
         "📍 Distance From Home",
         min_value=1,
@@ -379,32 +437,40 @@ with col3:
         value=10
     )
 
+
 # =========================================================
 # ROW 3
 # =========================================================
 
 col1, col2, col3 = st.columns(3)
 
+
 with col1:
+
     job_satisfaction = st.select_slider(
         "😊 Job Satisfaction",
         options=[1, 2, 3, 4],
         value=3
     )
 
+
 with col2:
+
     environment_satisfaction = st.select_slider(
         "🌱 Environment Satisfaction",
         options=[1, 2, 3, 4],
         value=3
     )
 
+
 with col3:
+
     job_involvement = st.select_slider(
         "🤝 Job Involvement",
         options=[1, 2, 3, 4],
         value=3
     )
+
 
 # =========================================================
 # ROW 4
@@ -412,7 +478,9 @@ with col3:
 
 col1, col2, col3 = st.columns(3)
 
+
 with col1:
+
     overtime = st.selectbox(
         "⏰ Overtime",
         [
@@ -421,14 +489,18 @@ with col1:
         ]
     )
 
+
 with col2:
+
     work_life_balance = st.select_slider(
         "⚖️ Work-Life Balance",
         options=[1, 2, 3, 4],
         value=3
     )
 
+
 with col3:
+
     years_at_company = st.number_input(
         "🏆 Years At Company",
         min_value=0,
@@ -436,13 +508,16 @@ with col3:
         value=5
     )
 
+
 # =========================================================
 # ROW 5
 # =========================================================
 
 col1, col2, col3 = st.columns(3)
 
+
 with col1:
+
     total_working_years = st.number_input(
         "💼 Total Working Years",
         min_value=0,
@@ -450,7 +525,9 @@ with col1:
         value=8
     )
 
+
 with col2:
+
     companies_worked = st.number_input(
         "🏢 Companies Worked",
         min_value=0,
@@ -458,7 +535,9 @@ with col2:
         value=2
     )
 
+
 with col3:
+
     marital_status = st.selectbox(
         "💍 Marital Status",
         [
@@ -467,6 +546,7 @@ with col3:
             "Divorced"
         ]
     )
+
 
 # =========================================================
 # PREDICTION BUTTON
@@ -477,6 +557,7 @@ st.markdown("<br>", unsafe_allow_html=True)
 predict_button = st.button(
     "🔮 Predict Attrition Risk"
 )
+
 
 # =========================================================
 # PREDICTION
@@ -506,7 +587,8 @@ if predict_button:
             "MaritalStatus": marital_status,
             "MonthlyIncome": monthly_income,
             "MonthlyRate": 15000,
-            "NumCompaniesWorked": companies_worked,
+            "NumCompaniesWorked":
+                companies_worked,
             "Over18": "Y",
             "OverTime": overtime,
             "PercentSalaryHike": 15,
@@ -527,83 +609,78 @@ if predict_button:
         }]
     )
 
-    try:
-
-        prediction = model.predict(input_data)[0]
-
-        probability = (
-            model.predict_proba(input_data)[0][1]
-            * 100
-        )
-
-        # HIGH RISK
-
-        if predict_button:
-
-    input_data = pd.DataFrame([{
-        "Age": age,
-        "BusinessTravel": business_travel,
-        "DailyRate": 750,
-        "Department": department,
-        "DistanceFromHome": distance_from_home,
-        "Education": 3,
-        "EducationField": "Life Sciences",
-        "EmployeeCount": 1,
-        "EmployeeNumber": 9999,
-        "EnvironmentSatisfaction": environment_satisfaction,
-        "Gender": "Female",
-        "HourlyRate": 65,
-        "JobInvolvement": job_involvement,
-        "JobLevel": 2,
-        "JobRole": job_role,
-        "JobSatisfaction": job_satisfaction,
-        "MaritalStatus": marital_status,
-        "MonthlyIncome": monthly_income,
-        "MonthlyRate": 15000,
-        "NumCompaniesWorked": companies_worked,
-        "Over18": "Y",
-        "OverTime": overtime,
-        "PercentSalaryHike": 15,
-        "PerformanceRating": 3,
-        "RelationshipSatisfaction": 3,
-        "StandardHours": 80,
-        "StockOptionLevel": 1,
-        "TotalWorkingYears": total_working_years,
-        "TrainingTimesLastYear": 3,
-        "WorkLifeBalance": work_life_balance,
-        "YearsAtCompany": years_at_company,
-        "YearsInCurrentRole": 3,
-        "YearsSinceLastPromotion": 1,
-        "YearsWithCurrManager": 3
-    }])
 
     try:
 
-        prediction = model.predict(input_data)[0]
+        prediction = model.predict(
+            input_data
+        )[0]
+
 
         probability = (
-            model.predict_proba(input_data)[0][1] * 100
+            model.predict_proba(
+                input_data
+            )[0][1] * 100
         )
 
+
+        # =================================================
         # HIGH RISK
+        # =================================================
+
         if prediction == 1:
 
-            st.error(
-                f"🔴 HIGH ATTRITION RISK\n\n"
-                f"Probability of leaving: {probability:.2f}%"
+            st.markdown(
+                f"""
+                <div class="result-box high-risk">
+
+                    <div class="result-title">
+                        🔴 High Attrition Risk
+                    </div>
+
+                    <div class="result-probability">
+                        Probability of leaving:
+                        <b>{probability:.2f}%</b>
+                    </div>
+
+                </div>
+                """,
+                unsafe_allow_html=True
             )
 
+
+        # =================================================
         # LOW RISK
+        # =================================================
+
         else:
 
-            st.success(
-                f"🟢 LOW ATTRITION RISK\n\n"
-                f"Probability of leaving: {probability:.2f}%"
+            st.markdown(
+                f"""
+                <div class="result-box low-risk">
+
+                    <div class="result-title">
+                        🟢 Low Attrition Risk
+                    </div>
+
+                    <div class="result-probability">
+                        Probability of leaving:
+                        <b>{probability:.2f}%</b>
+                    </div>
+
+                </div>
+                """,
+                unsafe_allow_html=True
             )
+
 
     except Exception as e:
 
-        st.error(f"❌ Prediction Error: {e}")
+        st.error(
+            f"❌ Prediction Error: {e}"
+        )
+
+
 # =========================================================
 # FOOTER
 # =========================================================
@@ -611,9 +688,13 @@ if predict_button:
 st.markdown(
     """
     <div class="footer">
+
         🤖 AI-Based Employee Attrition Prediction System
+
         <br>
+
         Built with Python • Machine Learning • Streamlit
+
     </div>
     """,
     unsafe_allow_html=True
