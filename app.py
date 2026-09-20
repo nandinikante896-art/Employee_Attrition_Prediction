@@ -1,189 +1,348 @@
+```python
 import streamlit as st
-import joblib
 import pandas as pd
+import joblib
 from pathlib import Path
+
 
 # =========================================================
 # PAGE CONFIG
 # =========================================================
+
 st.set_page_config(
     page_title="Employee Attrition Prediction",
     page_icon="👨‍💼",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
+
 
 # =========================================================
 # CUSTOM CSS
 # =========================================================
-st.markdown("""
-<style>
 
-.stApp {
-    background:
-        radial-gradient(circle at 10% 10%, rgba(0, 150, 255, 0.20), transparent 25%),
-        radial-gradient(circle at 90% 20%, rgba(150, 80, 255, 0.20), transparent 25%),
-        linear-gradient(135deg, #07111f 0%, #101c35 45%, #172b4d 100%);
-    color: white;
-}
+st.markdown(
+    """
+    <style>
 
-/* Main container */
-.block-container {
-    padding-top: 2rem;
-    padding-bottom: 3rem;
-    max-width: 1100px;
-}
+    html, body {
+        margin: 0;
+        padding: 0;
+    }
 
-/* Hero section */
-.hero {
-    padding: 35px;
-    border-radius: 25px;
-    background:
-        linear-gradient(
-            135deg,
-            rgba(15, 76, 129, 0.95),
-            rgba(89, 45, 145, 0.92)
-        );
-    box-shadow: 0 15px 45px rgba(0,0,0,0.35);
-    margin-bottom: 25px;
-    border: 1px solid rgba(255,255,255,0.15);
-}
+    [data-testid="stAppViewContainer"] {
+        background:
+            radial-gradient(
+                circle at top left,
+                rgba(90, 70, 180, 0.30),
+                transparent 35%
+            ),
+            radial-gradient(
+                circle at bottom right,
+                rgba(0, 160, 190, 0.20),
+                transparent 35%
+            ),
+            linear-gradient(
+                135deg,
+                #07111f 0%,
+                #101a33 50%,
+                #0b1325 100%
+            );
+    }
 
-.hero h1 {
-    font-size: 42px;
-    margin-bottom: 8px;
-    color: white;
-}
+    [data-testid="stHeader"] {
+        background: transparent;
+        height: 0;
+        min-height: 0;
+    }
 
-.hero p {
-    font-size: 18px;
-    color: #e8efff;
-}
+    [data-testid="stToolbar"] {
+        display: none;
+    }
 
-/* Employee icons */
-.employee-icons {
-    text-align: center;
-    font-size: 45px;
-    letter-spacing: 15px;
-    margin-top: 18px;
-}
+    [data-testid="stDecoration"] {
+        display: none;
+    }
 
-/* Section cards */
-.section-card {
-    background: rgba(255,255,255,0.08);
-    padding: 22px;
-    border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.12);
-    backdrop-filter: blur(12px);
-    margin-bottom: 20px;
-}
+    .block-container {
+        max-width: 100% !important;
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+        padding-left: 3rem !important;
+        padding-right: 3rem !important;
+    }
 
-/* Input labels */
-label {
-    color: white !important;
-    font-weight: 600 !important;
-}
 
-/* Button */
-.stButton > button {
-    width: 100%;
-    border-radius: 14px;
-    height: 55px;
-    font-size: 18px;
-    font-weight: 700;
-    background: linear-gradient(90deg, #00c6ff, #7b2cff);
-    color: white;
-    border: none;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-}
+    /* TITLE */
 
-.stButton > button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.4);
-}
+    .main-title {
+        text-align: center;
+        color: white !important;
+        font-size: 3rem;
+        font-weight: 800;
+        margin: 0;
+    }
 
-/* Result cards */
-.success-card {
-    background: linear-gradient(
-        135deg,
-        rgba(0, 180, 120, 0.25),
-        rgba(0, 255, 170, 0.10)
-    );
-    border: 1px solid rgba(0,255,170,0.4);
-    padding: 30px;
-    border-radius: 22px;
-    text-align: center;
-}
+    .subtitle {
+        text-align: center;
+        color: #d4dbea !important;
+        font-size: 1.05rem;
+        margin-top: 5px;
+        margin-bottom: 30px;
+    }
 
-.danger-card {
-    background: linear-gradient(
-        135deg,
-        rgba(255, 60, 80, 0.25),
-        rgba(255, 120, 50, 0.10)
-    );
-    border: 1px solid rgba(255,80,80,0.4);
-    padding: 30px;
-    border-radius: 22px;
-    text-align: center;
-}
 
-.result-title {
-    font-size: 32px;
-    font-weight: 800;
-}
+    /* SECTION */
 
-.probability {
-    font-size: 26px;
-    font-weight: 700;
-    margin-top: 10px;
-}
+    .section-title {
+        color: white !important;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
 
-/* Footer */
-.footer {
-    text-align: center;
-    color: #aebbd2;
-    margin-top: 35px;
-    font-size: 14px;
-}
+    .section-text {
+        color: #c5cfdf !important;
+        margin-bottom: 15px;
+    }
 
-</style>
-""", unsafe_allow_html=True)
+
+    /* LABELS */
+
+    label {
+        color: white !important;
+        font-weight: 600 !important;
+    }
+
+
+    /* INPUTS */
+
+    div[data-baseweb="input"] {
+        background-color: white !important;
+        border-radius: 10px !important;
+        border: 1px solid #d0d5dd !important;
+    }
+
+    div[data-baseweb="input"] > div {
+        background-color: white !important;
+        border-radius: 10px !important;
+        border: none !important;
+    }
+
+    div[data-baseweb="input"] input {
+        background-color: white !important;
+        color: #111111 !important;
+        -webkit-text-fill-color: #111111 !important;
+        font-size: 1rem !important;
+    }
+
+    input[type="number"] {
+        color: #111111 !important;
+        background-color: white !important;
+        -webkit-text-fill-color: #111111 !important;
+    }
+
+
+    /* SELECT BOX */
+
+    div[data-baseweb="select"] > div {
+        background-color: white !important;
+        border: 1px solid #d0d5dd !important;
+        border-radius: 10px !important;
+    }
+
+    div[data-baseweb="select"] span {
+        color: #111111 !important;
+        -webkit-text-fill-color: #111111 !important;
+    }
+
+    div[data-baseweb="select"] input {
+        color: #111111 !important;
+        -webkit-text-fill-color: #111111 !important;
+    }
+
+
+    /* DROPDOWN */
+
+    div[data-baseweb="popover"] {
+        background-color: white !important;
+    }
+
+    div[data-baseweb="menu"] {
+        background-color: white !important;
+    }
+
+    div[role="option"] {
+        color: #111111 !important;
+        background-color: white !important;
+    }
+
+    div[role="option"]:hover {
+        background-color: #eeeeee !important;
+        color: #111111 !important;
+    }
+
+
+    /* BUTTON */
+
+    .stButton > button {
+        width: 100% !important;
+        height: 3.3rem !important;
+        border: none !important;
+        border-radius: 12px !important;
+        background: linear-gradient(
+            90deg,
+            #667eea,
+            #764ba2
+        ) !important;
+        color: white !important;
+        font-size: 1.1rem !important;
+        font-weight: 700 !important;
+        margin-top: 15px;
+    }
+
+    .stButton > button:hover {
+        color: white !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(118, 75, 162, 0.45);
+    }
+
+
+    /* RESULT */
+
+    .result-box {
+        margin-top: 30px;
+        padding: 25px;
+        border-radius: 18px;
+        text-align: center;
+    }
+
+    .high-risk {
+        background: rgba(220, 53, 69, 0.18);
+        border: 1px solid rgba(255, 90, 100, 0.50);
+    }
+
+    .low-risk {
+        background: rgba(25, 180, 110, 0.18);
+        border: 1px solid rgba(50, 220, 140, 0.50);
+    }
+
+    .result-title {
+        color: white !important;
+        font-size: 1.8rem;
+        font-weight: 800;
+    }
+
+    .result-probability {
+        color: #e5edf9 !important;
+        font-size: 1.15rem;
+        margin-top: 8px;
+    }
+
+
+    /* FOOTER */
+
+    .footer {
+        text-align: center;
+        color: #aab7ca !important;
+        font-size: 0.9rem;
+        margin-top: 35px;
+        padding-bottom: 10px;
+    }
+
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
+# =========================================================
+# MODEL PATH
+# =========================================================
+
+MODEL_PATH = (
+    Path(__file__).resolve().parent
+    / "best_model.pkl"
+)
 
 
 # =========================================================
 # LOAD MODEL
 # =========================================================
-MODEL_PATH = Path(__file__).resolve().parent / "best_model.pkl"
+
+if not MODEL_PATH.exists():
+
+    st.error(
+        "❌ Model file not found!\n\n"
+        "Please make sure this file exists:\n"
+        "models/best_model.pkl"
+    )
+
+    st.stop()
+
+
+try:
+
+    model = joblib.load(MODEL_PATH)
+
+except Exception as e:
+
+    st.error(
+        f"❌ Model loading error: {e}"
+    )
+
+    st.stop()
+
 
 # =========================================================
-# HERO
+# HEADER
 # =========================================================
-st.markdown("""
-<div class="hero">
 
-<h1>👨‍💼 Employee Attrition Prediction</h1>
+st.markdown(
+    """
+    <div class="main-title">
+        👨‍💼 Employee Attrition Prediction
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-<p>
-AI-powered system that predicts whether an employee has
-<strong>Low</strong> or <strong>High</strong> attrition risk.
-</p>
-
-<div class="employee-icons">
-👩‍💼 👨‍💻 👩‍💻 👨‍💼 🧑‍💻
-</div>
-
-</div>
-""", unsafe_allow_html=True)
+st.markdown(
+    """
+    <div class="subtitle">
+        🤖 AI-powered system to predict employee attrition risk
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 
 # =========================================================
-# INPUT SECTION
+# SECTION TITLE
 # =========================================================
-st.markdown("""
-<div class="section-card">
-<h2>📋 Employee Information</h2>
-<p>Enter the employee details below.</p>
-</div>
-""", unsafe_allow_html=True)
+
+st.markdown(
+    """
+    <div class="section-title">
+        📋 Employee Information
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    """
+    <div class="section-text">
+        Enter the employee details below to predict attrition risk.
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+
+# =========================================================
+# ROW 1
+# =========================================================
 
 col1, col2, col3 = st.columns(3)
 
@@ -192,9 +351,11 @@ with col1:
     age = st.number_input(
         "🎂 Age",
         min_value=18,
-        max_value=65,
+        max_value=70,
         value=30
     )
+
+with col2:
 
     department = st.selectbox(
         "🏢 Department",
@@ -204,6 +365,8 @@ with col1:
             "Human Resources"
         ]
     )
+
+with col3:
 
     job_role = st.selectbox(
         "💼 Job Role",
@@ -220,12 +383,24 @@ with col1:
         ]
     )
 
+
+# =========================================================
+# ROW 2
+# =========================================================
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+
     monthly_income = st.number_input(
         "💰 Monthly Income",
         min_value=1000,
-        max_value=50000,
-        value=5000
+        max_value=200000,
+        value=5000,
+        step=500
     )
+
+with col2:
 
     business_travel = st.selectbox(
         "✈️ Business Travel",
@@ -236,64 +411,106 @@ with col1:
         ]
     )
 
-
-with col2:
+with col3:
 
     distance_from_home = st.number_input(
         "📍 Distance From Home",
         min_value=1,
-        max_value=30,
-        value=5
+        max_value=100,
+        value=10
     )
 
-    job_satisfaction = st.slider(
+
+# =========================================================
+# ROW 3
+# =========================================================
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+
+    job_satisfaction = st.select_slider(
         "😊 Job Satisfaction",
-        1, 4, 3
+        options=[1, 2, 3, 4],
+        value=3
     )
 
-    environment_satisfaction = st.slider(
+with col2:
+
+    environment_satisfaction = st.select_slider(
         "🌱 Environment Satisfaction",
-        1, 4, 3
+        options=[1, 2, 3, 4],
+        value=3
     )
-
-    job_involvement = st.slider(
-        "🤝 Job Involvement",
-        1, 4, 3
-    )
-
-    overtime = st.selectbox(
-        "⏰ Overtime",
-        ["Yes", "No"]
-    )
-
 
 with col3:
 
-    work_life_balance = st.slider(
-        "⚖️ Work-Life Balance",
-        1, 4, 3
+    job_involvement = st.select_slider(
+        "🤝 Job Involvement",
+        options=[1, 2, 3, 4],
+        value=3
     )
+
+
+# =========================================================
+# ROW 4
+# =========================================================
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+
+    overtime = st.selectbox(
+        "⏰ Overtime",
+        [
+            "Yes",
+            "No"
+        ]
+    )
+
+with col2:
+
+    work_life_balance = st.select_slider(
+        "⚖️ Work-Life Balance",
+        options=[1, 2, 3, 4],
+        value=3
+    )
+
+with col3:
 
     years_at_company = st.number_input(
         "🏆 Years At Company",
         min_value=0,
-        max_value=40,
+        max_value=50,
         value=5
     )
 
+
+# =========================================================
+# ROW 5
+# =========================================================
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+
     total_working_years = st.number_input(
-        "📅 Total Working Years",
+        "💼 Total Working Years",
         min_value=0,
-        max_value=45,
+        max_value=50,
         value=8
     )
 
+with col2:
+
     companies_worked = st.number_input(
-        "🏭 Companies Worked",
+        "🏢 Companies Worked",
         min_value=0,
-        max_value=10,
+        max_value=20,
         value=2
     )
+
+with col3:
 
     marital_status = st.selectbox(
         "💍 Marital Status",
@@ -306,112 +523,135 @@ with col3:
 
 
 # =========================================================
-# PREDICTION
+# PREDICT BUTTON
 # =========================================================
+
 st.markdown("<br>", unsafe_allow_html=True)
 
-if st.button("🔮 Predict Employee Attrition Risk"):
+predict_button = st.button(
+    "🔮 Predict Attrition Risk"
+)
 
-    input_data = pd.DataFrame([{
 
-        "Age": age,
-        "BusinessTravel": business_travel,
-        "DailyRate": 750,
-        "Department": department,
-        "DistanceFromHome": distance_from_home,
-        "Education": 3,
-        "EducationField": "Life Sciences",
-        "EmployeeCount": 1,
-        "EmployeeNumber": 9999,
-        "EnvironmentSatisfaction": environment_satisfaction,
-        "Gender": "Female",
-        "HourlyRate": 65,
-        "JobInvolvement": job_involvement,
-        "JobLevel": 2,
-        "JobRole": job_role,
-        "JobSatisfaction": job_satisfaction,
-        "MaritalStatus": marital_status,
-        "MonthlyIncome": monthly_income,
-        "MonthlyRate": 15000,
-        "NumCompaniesWorked": companies_worked,
-        "Over18": "Y",
-        "OverTime": overtime,
-        "PercentSalaryHike": 15,
-        "PerformanceRating": 3,
-        "RelationshipSatisfaction": 3,
-        "StandardHours": 80,
-        "StockOptionLevel": 1,
-        "TotalWorkingYears": total_working_years,
-        "TrainingTimesLastYear": 3,
-        "WorkLifeBalance": work_life_balance,
-        "YearsAtCompany": years_at_company,
-        "YearsInCurrentRole": 3,
-        "YearsSinceLastPromotion": 1,
-        "YearsWithCurrManager": 3
+# =========================================================
+# PREDICTION
+# =========================================================
 
-    }])
+if predict_button:
 
-    prediction = model.predict(input_data)[0]
+    input_data = pd.DataFrame(
+        [{
+            "Age": age,
+            "BusinessTravel": business_travel,
+            "DailyRate": 750,
+            "Department": department,
+            "DistanceFromHome": distance_from_home,
+            "Education": 3,
+            "EducationField": "Life Sciences",
+            "EmployeeCount": 1,
+            "EmployeeNumber": 9999,
+            "EnvironmentSatisfaction": environment_satisfaction,
+            "Gender": "Female",
+            "HourlyRate": 65,
+            "JobInvolvement": job_involvement,
+            "JobLevel": 2,
+            "JobRole": job_role,
+            "JobSatisfaction": job_satisfaction,
+            "MaritalStatus": marital_status,
+            "MonthlyIncome": monthly_income,
+            "MonthlyRate": 15000,
+            "NumCompaniesWorked": companies_worked,
+            "Over18": "Y",
+            "OverTime": overtime,
+            "PercentSalaryHike": 15,
+            "PerformanceRating": 3,
+            "RelationshipSatisfaction": 3,
+            "StandardHours": 80,
+            "StockOptionLevel": 1,
+            "TotalWorkingYears": total_working_years,
+            "TrainingTimesLastYear": 3,
+            "WorkLifeBalance": work_life_balance,
+            "YearsAtCompany": years_at_company,
+            "YearsInCurrentRole": 3,
+            "YearsSinceLastPromotion": 1,
+            "YearsWithCurrManager": 3
+        }]
+    )
 
-    probability = model.predict_proba(input_data)[0][1] * 100
+    try:
 
-    st.markdown("<br>", unsafe_allow_html=True)
+        prediction = model.predict(input_data)[0]
 
-    # =====================================================
-    # RESULT
-    # =====================================================
+        probability = (
+            model.predict_proba(input_data)[0][1] * 100
+        )
 
-    if prediction == 1:
 
-        st.markdown(f"""
-        <div class="danger-card">
+        # =================================================
+        # HIGH RISK
+        # =================================================
 
-        <div class="result-title">
-        🔴 High Attrition Risk
-        </div>
+        if prediction == 1:
 
-        <div class="probability">
-        Risk Probability: {probability:.2f}%
-        </div>
+            st.markdown(
+                f"""
+                <div class="result-box high-risk">
+                    <div class="result-title">
+                        🔴 High Attrition Risk
+                    </div>
 
-        <p>
-        This employee shows a higher predicted likelihood
-        of leaving the organization.
-        </p>
+                    <div class="result-probability">
+                        Probability of leaving:
+                        <b>{probability:.2f}%</b>
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
-        </div>
-        """, unsafe_allow_html=True)
 
-    else:
+        # =================================================
+        # LOW RISK
+        # =================================================
 
-        st.markdown(f"""
-        <div class="success-card">
+        else:
 
-        <div class="result-title">
-        🟢 Low Attrition Risk
-        </div>
+            st.markdown(
+                f"""
+                <div class="result-box low-risk">
+                    <div class="result-title">
+                        🟢 Low Attrition Risk
+                    </div>
 
-        <div class="probability">
-        Risk Probability: {probability:.2f}%
-        </div>
+                    <div class="result-probability">
+                        Probability of leaving:
+                        <b>{probability:.2f}%</b>
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
-        <p>
-        This employee shows a lower predicted likelihood
-        of leaving the organization.
-        </p>
 
-        </div>
-        """, unsafe_allow_html=True)
+    except Exception as e:
+
+        st.error(
+            f"❌ Prediction Error: {e}"
+        )
 
 
 # =========================================================
 # FOOTER
 # =========================================================
 
-st.markdown("""
-<div class="footer">
-🤖 AI-Based Employee Attrition Prediction System
-<br>
-Built with Python • Machine Learning • Streamlit
-</div>
-""", unsafe_allow_html=True)
+st.markdown(
+    """
+    <div class="footer">
+        🤖 AI-Based Employee Attrition Prediction System
+        <br>
+        Built with Python • Machine Learning • Streamlit
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+```
