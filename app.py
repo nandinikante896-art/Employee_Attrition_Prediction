@@ -24,6 +24,10 @@ st.set_page_config(
 st.markdown(
     """
     <style>
+    [data-testid="stMarkdownContainer"] h2 {
+    color: white !important;
+    font-weight: 800 !important;
+}
 
     html, body {
         margin: 0;
