@@ -3,16 +3,14 @@ import joblib
 import pandas as pd
 from pathlib import Path
 
-# =========================================================
-# PAGE CONFIG
-# =========================================================
 st.set_page_config(
     page_title="Employee Attrition Prediction",
     page_icon="👨‍💼",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
-# =========================================================
+
 # CUSTOM CSS
 # =========================================================
 st.markdown("""
