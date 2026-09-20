@@ -154,8 +154,6 @@ label {
 # =========================================================
 MODEL_PATH = Path(__file__).resolve().parent  "best_model.pkl"
 
-model = joblib.load(MODEL_PATH)
-
 
 # =========================================================
 # HERO
