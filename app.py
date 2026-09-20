@@ -539,44 +539,42 @@ predict_button = st.button(
 
 if predict_button:
 
-    input_data = pd.DataFrame(
-        [{
-            "Age": age,
-            "BusinessTravel": business_travel,
-            "DailyRate": 750,
-            "Department": department,
-            "DistanceFromHome": distance_from_home,
-            "Education": 3,
-            "EducationField": "Life Sciences",
-            "EmployeeCount": 1,
-            "EmployeeNumber": 9999,
-            "EnvironmentSatisfaction": environment_satisfaction,
-            "Gender": "Female",
-            "HourlyRate": 65,
-            "JobInvolvement": job_involvement,
-            "JobLevel": 2,
-            "JobRole": job_role,
-            "JobSatisfaction": job_satisfaction,
-            "MaritalStatus": marital_status,
-            "MonthlyIncome": monthly_income,
-            "MonthlyRate": 15000,
-            "NumCompaniesWorked": companies_worked,
-            "Over18": "Y",
-            "OverTime": overtime,
-            "PercentSalaryHike": 15,
-            "PerformanceRating": 3,
-            "RelationshipSatisfaction": 3,
-            "StandardHours": 80,
-            "StockOptionLevel": 1,
-            "TotalWorkingYears": total_working_years,
-            "TrainingTimesLastYear": 3,
-            "WorkLifeBalance": work_life_balance,
-            "YearsAtCompany": years_at_company,
-            "YearsInCurrentRole": 3,
-            "YearsSinceLastPromotion": 1,
-            "YearsWithCurrManager": 3
-        }]
-    )
+    input_data = pd.DataFrame([{
+        "Age": age,
+        "BusinessTravel": business_travel,
+        "DailyRate": 750,
+        "Department": department,
+        "DistanceFromHome": distance_from_home,
+        "Education": 3,
+        "EducationField": "Life Sciences",
+        "EmployeeCount": 1,
+        "EmployeeNumber": 9999,
+        "EnvironmentSatisfaction": environment_satisfaction,
+        "Gender": "Female",
+        "HourlyRate": 65,
+        "JobInvolvement": job_involvement,
+        "JobLevel": 2,
+        "JobRole": job_role,
+        "JobSatisfaction": job_satisfaction,
+        "MaritalStatus": marital_status,
+        "MonthlyIncome": monthly_income,
+        "MonthlyRate": 15000,
+        "NumCompaniesWorked": companies_worked,
+        "Over18": "Y",
+        "OverTime": overtime,
+        "PercentSalaryHike": 15,
+        "PerformanceRating": 3,
+        "RelationshipSatisfaction": 3,
+        "StandardHours": 80,
+        "StockOptionLevel": 1,
+        "TotalWorkingYears": total_working_years,
+        "TrainingTimesLastYear": 3,
+        "WorkLifeBalance": work_life_balance,
+        "YearsAtCompany": years_at_company,
+        "YearsInCurrentRole": 3,
+        "YearsSinceLastPromotion": 1,
+        "YearsWithCurrManager": 3
+    }])
 
     try:
 
@@ -586,59 +584,27 @@ if predict_button:
             model.predict_proba(input_data)[0][1] * 100
         )
 
-
-        # =================================================
-        # HIGH RISK
-        # =================================================
+        st.markdown("## Prediction Result")
 
         if prediction == 1:
 
-            st.markdown(
-                f"""
-                <div class="result-box high-risk">
-                    <div class="result-title">
-                        🔴 High Attrition Risk
-                    </div>
-
-                    <div class="result-probability">
-                        Probability of leaving:
-                        <b>{probability:.2f}%</b>
-                    </div>
-                </div>
-                """,
-                unsafe_allow_html=True
+            st.error(
+                f"🔴 HIGH ATTRITION RISK\n\n"
+                f"Probability of leaving: {probability:.2f}%"
             )
-
-
-        # =================================================
-        # LOW RISK
-        # =================================================
 
         else:
 
-            st.markdown(
-                f"""
-                <div class="result-box low-risk">
-                    <div class="result-title">
-                        🟢 Low Attrition Risk
-                    </div>
-
-                    <div class="result-probability">
-                        Probability of leaving:
-                        <b>{probability:.2f}%</b>
-                    </div>
-                </div>
-                """,
-                unsafe_allow_html=True
+            st.success(
+                f"🟢 LOW ATTRITION RISK\n\n"
+                f"Probability of leaving: {probability:.2f}%"
             )
-
 
     except Exception as e:
 
         st.error(
             f"❌ Prediction Error: {e}"
         )
-
 
 # =========================================================
 # FOOTER
