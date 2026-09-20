@@ -16,11 +16,18 @@ st.set_page_config(
 st.markdown("""
 <style>
 .block-container {
-    max-width: 100%;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    padding-left: 3rem;
-    padding-right: 3rem;
+    max-width: 100% !important;
+    padding-top: 0rem !important;
+    padding-bottom: 1rem !important;
+    padding-left: 3rem !important;
+    padding-right: 3rem !important;
+}
+header {
+    height: 0rem;
+}
+
+[data-testid="stHeader"] {
+    height: 0rem;
 }
 .stApp {
     background:
