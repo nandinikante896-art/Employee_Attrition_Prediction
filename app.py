@@ -272,7 +272,6 @@ st.markdown(
 
 MODEL_PATH = (
     Path(__file__).resolve().parent
-    / "models"
     / "best_model.pkl"
 )
 
