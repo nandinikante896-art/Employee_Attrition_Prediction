@@ -15,6 +15,10 @@ st.set_page_config(
 # =========================================================
 st.markdown("""
 <style>
+.block-container 
+    max-width: 100%;
+    padding-left: 3rem;
+    padding-right: 3rem;
 
 .stApp {
     background:
