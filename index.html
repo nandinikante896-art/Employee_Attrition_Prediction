@@ -1,0 +1,530 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Employee Attrition Predictor</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            padding: 30px;
+            color: #222;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header .icon {
+            font-size: 55px;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 38px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 17px;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 25px;
+            padding: 35px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+        }
+
+        .section-title {
+            font-size: 22px;
+            margin-bottom: 22px;
+            color: #5a42d6;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 7px;
+            color: #444;
+            font-size: 14px;
+        }
+
+        input,
+        select {
+            padding: 12px 13px;
+            border: 2px solid #e4e4f2;
+            border-radius: 12px;
+            outline: none;
+            font-size: 14px;
+            background: #fafaff;
+            transition: 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #7657e8;
+            box-shadow: 0 0 0 3px rgba(118,87,232,0.12);
+        }
+
+        .button-area {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        button {
+            border: none;
+            padding: 15px 35px;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            background: linear-gradient(135deg, #ff6a88, #ff8e53);
+            box-shadow: 0 8px 20px rgba(255,106,136,0.35);
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(255,106,136,0.45);
+        }
+
+        #result {
+            display: none;
+            margin-top: 30px;
+            padding: 28px;
+            border-radius: 18px;
+            text-align: center;
+        }
+
+        .low {
+            background: #e8fff3;
+            border: 2px solid #27ae60;
+            color: #168347;
+        }
+
+        .high {
+            background: #fff0f0;
+            border: 2px solid #e74c3c;
+            color: #c0392b;
+        }
+
+        #result h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        #result p {
+            font-size: 18px;
+            margin-top: 7px;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 25px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 850px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 550px) {
+            body {
+                padding: 15px;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <div class="icon">🤖</div>
+
+        <h1>AI Employee Attrition Predictor</h1>
+
+        <p>
+            Predict employee attrition risk using Machine Learning
+        </p>
+    </div>
+
+    <div class="card">
+
+        <h2 class="section-title">
+            👤 Employee Information
+        </h2>
+
+        <form id="predictionForm">
+
+            <div class="form-grid">
+
+                <!-- 1 -->
+                <div class="field">
+                    <label>Age</label>
+                    <input type="number" id="Age" min="18" max="70" required>
+                </div>
+
+                <!-- 2 -->
+                <div class="field">
+                    <label>Department</label>
+                    <select id="Department">
+                        <option>Sales</option>
+                        <option>Research & Development</option>
+                        <option>Human Resources</option>
+                    </select>
+                </div>
+
+                <!-- 3 -->
+                <div class="field">
+                    <label>Job Role</label>
+                    <select id="JobRole">
+                        <option>Sales Executive</option>
+                        <option>Research Scientist</option>
+                        <option>Laboratory Technician</option>
+                        <option>Manufacturing Director</option>
+                        <option>Healthcare Representative</option>
+                        <option>Manager</option>
+                        <option>Sales Representative</option>
+                        <option>Research Director</option>
+                        <option>Human Resources</option>
+                    </select>
+                </div>
+
+                <!-- 4 -->
+                <div class="field">
+                    <label>Monthly Income</label>
+                    <input type="number" id="MonthlyIncome" min="1000" required>
+                </div>
+
+                <!-- 5 -->
+                <div class="field">
+                    <label>Business Travel</label>
+                    <select id="BusinessTravel">
+                        <option>Travel_Rarely</option>
+                        <option>Travel_Frequently</option>
+                        <option>Non-Travel</option>
+                    </select>
+                </div>
+
+                <!-- 6 -->
+                <div class="field">
+                    <label>Distance From Home</label>
+                    <input type="number" id="DistanceFromHome" min="1" required>
+                </div>
+
+                <!-- 7 -->
+                <div class="field">
+                    <label>Job Satisfaction</label>
+                    <select id="JobSatisfaction">
+                        <option value="1">1 - Low</option>
+                        <option value="2">2 - Medium</option>
+                        <option value="3" selected>3 - High</option>
+                        <option value="4">4 - Very High</option>
+                    </select>
+                </div>
+
+                <!-- 8 -->
+                <div class="field">
+                    <label>Environment Satisfaction</label>
+                    <select id="EnvironmentSatisfaction">
+                        <option value="1">1 - Low</option>
+                        <option value="2">2 - Medium</option>
+                        <option value="3" selected>3 - High</option>
+                        <option value="4">4 - Very High</option>
+                    </select>
+                </div>
+
+                <!-- 9 -->
+                <div class="field">
+                    <label>Job Involvement</label>
+                    <select id="JobInvolvement">
+                        <option value="1">1 - Low</option>
+                        <option value="2">2 - Medium</option>
+                        <option value="3" selected>3 - High</option>
+                        <option value="4">4 - Very High</option>
+                    </select>
+                </div>
+
+                <!-- 10 -->
+                <div class="field">
+                    <label>Overtime</label>
+                    <select id="OverTime">
+                        <option>No</option>
+                        <option>Yes</option>
+                    </select>
+                </div>
+
+                <!-- 11 -->
+                <div class="field">
+                    <label>Work-Life Balance</label>
+                    <select id="WorkLifeBalance">
+                        <option value="1">1 - Bad</option>
+                        <option value="2">2 - Good</option>
+                        <option value="3" selected>3 - Better</option>
+                        <option value="4">4 - Best</option>
+                    </select>
+                </div>
+
+                <!-- 12 -->
+                <div class="field">
+                    <label>Years At Company</label>
+                    <input type="number" id="YearsAtCompany" min="0" required>
+                </div>
+
+                <!-- 13 -->
+                <div class="field">
+                    <label>Total Working Years</label>
+                    <input type="number" id="TotalWorkingYears" min="0" required>
+                </div>
+
+                <!-- 14 -->
+                <div class="field">
+                    <label>Companies Worked</label>
+                    <input type="number" id="NumCompaniesWorked" min="0" required>
+                </div>
+
+                <!-- 15 -->
+                <div class="field">
+                    <label>Marital Status</label>
+                    <select id="MaritalStatus">
+                        <option>Single</option>
+                        <option>Married</option>
+                        <option>Divorced</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="button-area">
+                <button type="submit">
+                    🔮 Predict Attrition Risk
+                </button>
+            </div>
+
+        </form>
+
+        <div id="result"></div>
+
+    </div>
+
+    <div class="footer">
+        🤖 Powered by Machine Learning • Employee Retention Analysis
+    </div>
+
+</div>
+
+
+<script>
+
+document.getElementById("predictionForm").addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+        const data = {};
+
+        const fields = [
+            "Age",
+            "Department",
+            "JobRole",
+            "MonthlyIncome",
+            "BusinessTravel",
+            "DistanceFromHome",
+            "JobSatisfaction",
+            "EnvironmentSatisfaction",
+            "JobInvolvement",
+            "OverTime",
+            "WorkLifeBalance",
+            "YearsAtCompany",
+            "TotalWorkingYears",
+            "NumCompaniesWorked",
+            "MaritalStatus"
+        ];
+
+        fields.forEach(function(field) {
+
+            const element = document.getElementById(field);
+
+            if (element.type === "number") {
+                data[field] = Number(element.value);
+            } else {
+                data[field] = element.value;
+            }
+
+        });
+
+
+        /*
+         * Dataset columns not displayed in the UI.
+         * These are automatically filled so the backend
+         * receives the complete dataset structure.
+         */
+
+        data["EmployeeCount"] = 1;
+        data["EmployeeNumber"] = 9999;
+        data["HourlyRate"] = 65;
+        data["Over18"] = "Y";
+        data["StandardHours"] = 80;
+
+        data["DailyRate"] = 750;
+        data["Education"] = 3;
+        data["EducationField"] = "Life Sciences";
+        data["Gender"] = "Female";
+        data["JobLevel"] = 2;
+        data["MonthlyRate"] = 15000;
+        data["PercentSalaryHike"] = 15;
+        data["PerformanceRating"] = 3;
+        data["RelationshipSatisfaction"] = 3;
+        data["StockOptionLevel"] = 1;
+        data["TrainingTimesLastYear"] = 3;
+        data["YearsInCurrentRole"] = 3;
+        data["YearsSinceLastPromotion"] = 1;
+        data["YearsWithCurrManager"] = 3;
+
+
+        const resultBox = document.getElementById("result");
+
+        resultBox.style.display = "block";
+
+        resultBox.className = "";
+
+        resultBox.innerHTML =
+            "⏳ Analyzing employee information...";
+
+
+        try {
+
+            const response = await fetch("/predict", {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(data)
+
+            });
+
+
+            const result = await response.json();
+
+
+            if (result.error) {
+
+                resultBox.className = "high";
+
+                resultBox.innerHTML = `
+                    <h2>⚠️ Prediction Error</h2>
+                    <p>${result.error}</p>
+                `;
+
+                return;
+            }
+
+
+            if (result.prediction === 1) {
+
+                resultBox.className = "high";
+
+                resultBox.innerHTML = `
+                    <h2>🔴 High Attrition Risk</h2>
+                    <p>
+                        Predicted Probability:
+                        <strong>${result.probability}%</strong>
+                    </p>
+                    <p>
+                        This employee has a higher predicted
+                        risk of leaving the company.
+                    </p>
+                `;
+
+            } else {
+
+                resultBox.className = "low";
+
+                resultBox.innerHTML = `
+                    <h2>🟢 Low Attrition Risk</h2>
+                    <p>
+                        Predicted Probability:
+                        <strong>${result.probability}%</strong>
+                    </p>
+                    <p>
+                        This employee has a lower predicted
+                        risk of leaving the company.
+                    </p>
+                `;
+
+            }
+
+        } catch (error) {
+
+            resultBox.className = "high";
+
+            resultBox.innerHTML = `
+                <h2>⚠️ Connection Error</h2>
+                <p>
+                    Make sure the Flask server is running.
+                </p>
+            `;
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+
+
